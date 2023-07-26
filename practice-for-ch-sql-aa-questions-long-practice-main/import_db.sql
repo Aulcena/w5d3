@@ -3,7 +3,7 @@ PRAGMA foreign_keys = ON;
 CREATE TABLE users (
   id INTEGER PRIMARY KEY,
   fname TEXT NOT NULL,
-  lname TEXT NOT NULL,
+  lname TEXT NOT NULL
 );
 
 CREATE TABLE questions (
@@ -54,15 +54,21 @@ VALUES
   ('Zi', 'Tan');
 
 INSERT INTO
-  questions (title, body)  
+  questions (title, body, user_id)  
 VALUES
-  ('Lunch?', 'Anyone want to get lunch?'),
-  ('study?', 'Anyone want to study?');
+  ('Lunch?', 'Anyone want to get lunch?', (SELECT id FROM users WHERE fname LIKE 'Zi')),
+  ('Study?', 'Anyone want to study?', (SELECT id FROM users WHERE fname LIKE 'AJ'));
 
 INSERT INTO
   replies (body, user_id, questions_id)
 VALUES
-  ('Yes, let"s grab lunch', (SELECT id FROM users WHERE fname LIKE 'AJ'),(SELECT id FROM questions WHERE title like 'Lunch?'));
+  ('Yes, let"s grab lunch', (SELECT id FROM users WHERE fname LIKE 'AJ'),(SELECT id FROM questions WHERE title like 'Lunch?')),
+  ('No, i"m going to work through lunch.', (SELECT id FROM users WHERE fname LIKE 'Zi'),(SELECT id FROM questions WHERE title like 'Study?'));
+
+INSERT INTO
+  question_likes (likes, user_id, questions_id)
+VALUES
+  (5,(SELECT id FROM users WHERE fname LIKE 'Zi'),(SELECT id FROM questions WHERE title like 'Lunch?'));
 
 
 
