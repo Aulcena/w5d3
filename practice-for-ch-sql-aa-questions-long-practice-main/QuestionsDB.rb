@@ -59,3 +59,19 @@ class Question
 
   end
 end
+
+class QuestionsFollows
+   
+  def self.find_by_id(id)
+    data = QuestionsDatabase.instance.execute("SELECT * FROM question_follows WHERE question_follows.id = id")
+    q_follow = QuestionsFollows.new(data.first)
+
+  end
+
+  def initialize(options)
+    @id = options['id']
+    @user_id = options['user_id']
+    @questions_id = options['questions_id']
+  end
+end
+
