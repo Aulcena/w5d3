@@ -47,7 +47,6 @@ CREATE TABLE replies (
 
 CREATE TABLE question_likes (
   id INTEGER PRIMARY KEY,
-  likes INTEGER,
   questions_id INTEGER NOT NULL,
   user_id INTEGER NOT NULL,
 

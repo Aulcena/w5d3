@@ -1,5 +1,6 @@
 require 'sqlite3'
 require 'singleton'
+require 'byebug'
 
 
 class QuestionsDatabase < SQLite3::Database 
@@ -35,23 +36,40 @@ class User
     @lname = options['lname']
 
   end
+
+  def user_questions
+    Question.find_by_user_id(self.id)
+  end
 end 
 
 class Question
     attr_accessor :id, :title, :body, :user_id
   def self.find_by_id(id)
-    data = QuestionsDatabase.instance.execute("SELECT * FROM questions WHERE questions.id = id")
+    data = QuestionsDatabase.instance.execute(<<-SQL, id)
+    SELECT * FROM questions WHERE questions.id = ?
+    SQL
     # data.map {|datum| Users.new(datum)}
     # data => [ {id: 3, fname: 'kin', lname: 'tse' } ]
     question = Question.new(data.first)
   end
 
   def self.find_by_title(title)
-    data = QuestionsDatabase.instance.execute("SELECT * FROM questions WHERE questions.title = title")
+    data = QuestionsDatabase.instance.execute(<<-SQL, title)
+    SELECT * FROM questions WHERE questions.title = ?
+    SQL
     title = Question.new(data.first)
+  end
+  def self.find_by_user_id(id)
+    # data = QuestionsDatabase.instance.execute("SELECT * FROM questions WHERE questions.user_id = id")
+    data = QuestionsDatabase.instance.execute(<<-SQL, id)
+    SELECT * FROM questions WHERE questions.user_id = ?
+    SQL
+    debugger
+    user_id = Question.new(data.first)
   end
 
   def initialize(options)
+    debugger
     @id = options['id']
     @title = options['title']
     @body = options['body']
@@ -89,6 +107,11 @@ class Replies
     questions_id = Replies.new(data.first)
   end
 
+  def self.find_by_user_id(id)
+    data = QuestionsDatabase.instance.execute("SELECT * FROM replies WHERE replies.user_id = id")
+    user_id = Replies.new(data.first)
+  end
+
   def initialize(options)
     @id = options["id"]
     @body = options["body"]
@@ -110,7 +133,6 @@ class QuestionLikes
 
   def initialize(options)
     @id = options["id"]
-    @likes = options["likes"]
     @questions_id = options["questions_id"]
     @user_id = options["user_id"]
   end
