@@ -75,3 +75,44 @@ class QuestionsFollows
   end
 end
 
+class Replies
+
+  attr_accessor :id, :body, :user_id, :replies_id, :questions_id
+
+  def self.find_by_id(id)
+    data = QuestionsDatabase.instance.execute("SELECT * FROM replies WHERE replies.id = id")
+    reply = Replies.new(data.first)
+  end
+
+  def self.find_by_questions_id(q_id)
+    data = QuestionsDatabase.instance.execute("SELECT * FROM replies WHERE replies.id = q_id")
+    questions_id = Replies.new(data.first)
+  end
+
+  def initialize(options)
+    @id = options["id"]
+    @body = options["body"]
+    @user_id = options["user_id"]
+    @replies_id = options["replies_id"]
+    @questions_id = options["questions_id"]
+  end
+  
+end
+
+class QuestionLikes
+
+  attr_accessor :id, :likes, :questions_id, :user_id
+
+  def self.find_by_id(id)
+    data = QuestionsDatabase.instance.execute("SELECT * FROM question_likes WHERE question_likes.id = id")
+    likes = QuestionLikes.new(data.first)
+  end
+
+  def initialize(options)
+    @id = options["id"]
+    @likes = options["likes"]
+    @questions_id = options["questions_id"]
+    @user_id = options["user_id"]
+  end
+
+end
