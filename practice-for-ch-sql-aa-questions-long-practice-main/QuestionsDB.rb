@@ -36,3 +36,26 @@ class User
 
   end
 end 
+
+class Question
+    attr_accessor :id, :title, :body, :user_id
+  def self.find_by_id(id)
+    data = QuestionsDatabase.instance.execute("SELECT * FROM questions WHERE questions.id = id")
+    # data.map {|datum| Users.new(datum)}
+    # data => [ {id: 3, fname: 'kin', lname: 'tse' } ]
+    question = Question.new(data.first)
+  end
+
+  def self.find_by_title(title)
+    data = QuestionsDatabase.instance.execute("SELECT * FROM questions WHERE questions.title = title")
+    title = Question.new(data.first)
+  end
+
+  def initialize(options)
+    @id = options['id']
+    @title = options['title']
+    @body = options['body']
+    @user_id = options['user_id']
+
+  end
+end
